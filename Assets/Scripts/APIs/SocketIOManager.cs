@@ -408,6 +408,7 @@ public class SocketIOManager : MonoBehaviour
                     myMessage = myData.message;
                     playerdata.Balance = myData.message.Balance;
                     playerdata.currentWining = myData.message.currentWining;
+                    slotManager.updateBalance();
                     isResultdone = true;
                     break;
                 }
