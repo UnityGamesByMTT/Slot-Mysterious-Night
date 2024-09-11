@@ -83,14 +83,21 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button CloseAD_Button;
     [SerializeField] private GameObject ADPopup_Object;
 
+    [SerializeField] private Button m_AwakeGameButton;
+
     private bool isOpen;
 
     private bool isExit = false;
 
+    //private void Awake()
+    //{
+    //    if (SplashScreen) SplashScreen.SetActive(true);
+    //    StartCoroutine(LoadingRoutine());
+    //}
+
     private void Awake()
     {
-        if (SplashScreen) SplashScreen.SetActive(true);
-        StartCoroutine(LoadingRoutine());
+        SimulateClickByDefault();
     }
 
     private void Start()
@@ -112,10 +119,10 @@ public class UIManager : MonoBehaviour
         if (GameExit_Button) GameExit_Button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
 
         if (NoQuit_Button) NoQuit_Button.onClick.RemoveAllListeners();
-        if (NoQuit_Button) NoQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
+        if (NoQuit_Button) NoQuit_Button.onClick.AddListener(delegate { if(!isExit) ClosePopup(QuitPopup_Object); });
 
         if (CancelQuit_Button) CancelQuit_Button.onClick.RemoveAllListeners();
-        if (CancelQuit_Button) CancelQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
+        if (CancelQuit_Button) CancelQuit_Button.onClick.AddListener(delegate { if(!isExit) ClosePopup(QuitPopup_Object); });
 
         if (YesQuit_Button) YesQuit_Button.onClick.RemoveAllListeners();
         if (YesQuit_Button) YesQuit_Button.onClick.AddListener(CallOnExitFunction);
@@ -135,6 +142,15 @@ public class UIManager : MonoBehaviour
         if (CloseAD_Button) CloseAD_Button.onClick.RemoveAllListeners();
         if (CloseAD_Button) CloseAD_Button.onClick.AddListener(CallOnExitFunction);
 
+    }
+
+    //HACK: Something To Do Here
+    private void SimulateClickByDefault()
+    {
+
+        Debug.Log("Awaken The Game...");
+        m_AwakeGameButton.onClick.AddListener(() => { Debug.Log("Called The Game..."); });
+        m_AwakeGameButton.onClick.Invoke();
     }
 
     private void ToggleMusic()
@@ -212,7 +228,7 @@ public class UIManager : MonoBehaviour
             MenuButton.image.sprite = MenuOpenSprite;
             for (int i = 0; i < MenuGrp.childCount - 2; i++)
             {
-                MenuGrp.GetChild(i).DOLocalMoveY(-130 * (i + 1), 0.1f * (i + 1));
+                MenuGrp.GetChild(i).DOLocalMoveX(-130 * (i + 1), 0.1f * (i + 1));
             }
         }
         else
@@ -221,7 +237,7 @@ public class UIManager : MonoBehaviour
 
             for (int i = 0; i < MenuGrp.childCount - 2; i++)
             {
-                MenuGrp.GetChild(i).DOLocalMoveY(0 * (i + 1), 0.1f * (i + 1));
+                MenuGrp.GetChild(i).DOLocalMoveX(0 * (i + 1), 0.1f * (i + 1));
 
             }
 
@@ -279,7 +295,7 @@ public class UIManager : MonoBehaviour
     {
         isExit = true;
         slotManager.CallCloseSocket();
-        Application.ExternalCall("window.parent.postMessage", "onExit", "*");
+        //Application.ExternalCall("window.parent.postMessage", "onExit", "*");
     }
 
     private void OpenPopup(GameObject Popup)
