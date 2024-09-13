@@ -178,7 +178,7 @@ public class SlotBehaviour : MonoBehaviour
 
     private void AutoSpin()
     {
-        if (!IsAutoSpin)
+        if (!IsAutoSpin && !IsSpinning)
         {
 
             IsAutoSpin = true;
